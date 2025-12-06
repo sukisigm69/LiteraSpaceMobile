@@ -16,17 +16,18 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Harap isi semua field');
-      return;
-    }
+  if (!email || !password) {
+    Alert.alert('Error', 'Harap isi semua field');
+    return;
+  }
 
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.replace('/');
-    }, 1500);
-  };
+  setIsLoading(true);
+  setTimeout(() => {
+    setIsLoading(false);
+    router.replace('/(tabs)/home');
+  }, 1500);
+};
+
 
   const switchToRegister = () => {
     router.push('/(auth)/register');

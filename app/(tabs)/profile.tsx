@@ -106,11 +106,7 @@ export default function ProfilePage() {
 
   // Apply dark mode when setting changes
   useEffect(() => {
-    // Safe way to apply dark mode without using Appearance.setColorScheme
-    // Since Appearance.setColorScheme might not be available in all versions
     try {
-      // We'll just update our component state and rely on our dynamic styles
-      // The actual system theme change would require additional setup
       console.log('Dark mode:', darkMode ? 'enabled' : 'disabled');
     } catch (error) {
       console.error('Error applying dark mode:', error);
@@ -158,7 +154,7 @@ export default function ProfilePage() {
     }
   }, [userStats]);
 
-  // Handle logout - FIXED
+  // Handle logout - REVISED untuk fix navigation issue
   const handleLogout = useCallback(() => {
     Alert.alert(
       'Logout',
@@ -170,12 +166,43 @@ export default function ProfilePage() {
           style: 'destructive',
           onPress: async () => {
             try {
-              // In a real app, you would clear authentication tokens here
-              // For now, just redirect to login
-              router.replace('/login');
+              console.log('Logout initiated, navigating to login...');
+              
+              // Gunakan router.push dengan timeout untuk memastikan Alert ditutup dulu
+              setTimeout(() => {
+                // Coba beberapa metode navigasi untuk memastikan berhasil
+                try {
+                  // Metode 1: Gunakan push
+                  router.push('/login');
+                  console.log('Navigation with push attempted');
+                } catch (pushError) {
+                  console.error('Push failed:', pushError);
+                  
+                  // Metode 2: Gunakan replace
+                  try {
+                    router.replace('/login');
+                    console.log('Navigation with replace attempted');
+                  } catch (replaceError) {
+                    console.error('Replace failed:', replaceError);
+                    
+                    // Metode 3: Gunakan navigate
+                    try {
+                      router.navigate('/login');
+                      console.log('Navigation with navigate attempted');
+                    } catch (navigateError) {
+                      console.error('Navigate failed:', navigateError);
+                      Alert.alert('Error', 'Failed to navigate to login. Please restart the app.');
+                    }
+                  }
+                }
+              }, 100); // Beri sedikit delay untuk memastikan Alert ditutup
+              
             } catch (error) {
               console.error('Logout error:', error);
-              router.replace('/login');
+              // Fallback navigation
+              setTimeout(() => {
+                router.push('/login');
+              }, 100);
             }
           }
         }
